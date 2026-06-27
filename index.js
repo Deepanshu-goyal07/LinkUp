@@ -51,7 +51,7 @@ io.on('connection', (socket) => {
 
     // Handle when a user joins and sets their username
     socket.on('user joined', (username) => {
-        socket.username = username;
+        socket.username = username; // Store username in socket
         onlineUsers.set(socket.id, username); // Map of online users: key=socket.id, value=username
         console.log(`${username} joined the chat`);
 
@@ -59,7 +59,7 @@ io.on('connection', (socket) => {
         socket.join(`user:${username}`);
 
         // Broadcast updated list of online users
-        io.emit('update users list', Array.from(onlineUsers.values())); // 
+        io.emit('update users list', Array.from(onlineUsers.values())); // Broadcast updated list of online users
 
         // Send system message to all users
         io.emit('chat message', {
@@ -117,6 +117,7 @@ io.on('connection', (socket) => {
             sender: socket.username,
             receiver: target,
             text: text,
+            timestamp: new Date().toISOString(),
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
         // For History

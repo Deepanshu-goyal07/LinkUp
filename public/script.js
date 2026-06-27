@@ -27,6 +27,7 @@ socket.on('connect', () => {
     }
 });
 
+// Handle login
 loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const val = usernameInput.value.trim();
@@ -39,7 +40,7 @@ loginForm.addEventListener('submit', (e) => {
         chatContainer.style.display = 'block';
 
         // Notify server of new user joining
-        socket.emit('user joined', myUsername);
+        socket.emit('user joined', myUsername); // Send username to server
     }
 });
 
@@ -48,10 +49,10 @@ function renderUsersList() {
     usersList.innerHTML = '';
 
     // Filter out current user
-    const otherUsers = onlineUsersList.filter(u => u !== myUsername);
+    const otherUsers = onlineUsersList.filter(u => u !== myUsername); // Users other than current user
 
     if (otherUsers.length === 0) {
-        usersList.innerHTML = ' <em>No other users online</em>';
+        usersList.innerHTML = ' <em>No other users online</em>'; // No other users online
         return;
     }
 
@@ -78,30 +79,25 @@ socket.on('update users list', (users) => {
     renderUsersList();
 });
 
-// Select a user to start a private chat
-function selectUser(targetUser) {
-    currentTarget = targetUser;
-    chatHeader.textContent = `Chatting with: ${targetUser}`;
+// Select a user to start a private chat from online users :
+function selectUser(targetUser) { // Select a user to start a private chat
+    currentTarget = targetUser; // Set the target user
+    chatHeader.textContent = `Chatting with: ${targetUser}`; // Set the chat of user
 
-    // Reset unread count for the selected user
-    unreadCounts[targetUser] = 0;
-    renderUsersList();
+    unreadCounts[targetUser] = 0; // Reset unread count
+    renderUsersList(); // Render user list
 
-    // Re-render user list to update active state/styles
-    socket.emit('join room', targetUser);
+    socket.emit('join room', targetUser); // Send join room event to server
 
-    // Show form and clear messages
     form.style.display = 'flex';
     messages.innerHTML = '';
 }
 
-// Receive room history and update UI
+// Receive room history
 socket.on('room history', (data) => {
     currentRoom = data.room;
-    messages.innerHTML = ''; // Clear to prevent duplicates
-
-    // Re-render to ensure selection styles are applied correctly
-    renderUsersList();
+    messages.innerHTML = ''; // Clear messages
+    renderUsersList(); // Render users list
 
     data.history.forEach(msg => {
         displayMessage(msg);
@@ -116,7 +112,11 @@ function displayMessage(msg) {
         item.textContent = msg.text;
     } else {
         const senderName = msg.sender || msg.username || 'Unknown';
-        item.innerHTML = `<strong>${senderName}</strong> <span style="font-size: 0.8rem; color: #888;">(${msg.time})</span>: ${msg.text}`;
+        let formattedTime = msg.time;
+        if (msg.timestamp) {
+            formattedTime = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        item.innerHTML = `<strong>${senderName}</strong> <span style="font-size: 0.8rem; color: #888;">(${formattedTime})</span>: ${msg.text}`;
     }
     messages.appendChild(item);
     window.scrollTo(0, document.body.scrollHeight);
