@@ -23093,7 +23093,7 @@
                 const newest = fetched[fetched.length - 1];
                 if (newest && newest.sender !== myUsername) {
                   if ("Notification" in window && Notification.permission === "granted") {
-                    new Notification(`TexTie Polling Alert: ${newest.sender}`, {
+                    new Notification(`LinkUp Polling Alert: ${newest.sender}`, {
                       body: newest.text || "Sent an attachment"
                     });
                   }
@@ -23250,7 +23250,7 @@
       setIsLoggedIn(false);
       socket_default.disconnect();
     };
-    return /* @__PURE__ */ import_react7.default.createElement("div", null, /* @__PURE__ */ import_react7.default.createElement("h1", null, "Textie"), !isLoggedIn ? /* @__PURE__ */ import_react7.default.createElement(Auth, { onLoginSuccess: handleLoginSuccess }) : /* @__PURE__ */ import_react7.default.createElement(
+    return /* @__PURE__ */ import_react7.default.createElement("div", null, /* @__PURE__ */ import_react7.default.createElement("h1", null, "LinkUp"), !isLoggedIn ? /* @__PURE__ */ import_react7.default.createElement(Auth, { onLoginSuccess: handleLoginSuccess }) : /* @__PURE__ */ import_react7.default.createElement(
       ChatContainer,
       {
         myUsername,

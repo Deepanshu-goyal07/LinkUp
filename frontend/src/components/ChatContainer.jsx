@@ -46,7 +46,7 @@ export default function ChatContainer({ myUsername, isLoggedIn, handleLogout }) 
               // Only notify if the sender is not the current user
               if (newest && newest.sender !== myUsername) {
                 if ('Notification' in window && Notification.permission === 'granted') {
-                  new Notification(`TexTie Polling Alert: ${newest.sender}`, {
+                  new Notification(`LinkUp Polling Alert: ${newest.sender}`, {
                     body: newest.text || 'Sent an attachment',
                   });
                 }

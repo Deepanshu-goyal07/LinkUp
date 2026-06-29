@@ -35,7 +35,7 @@ export default function App() {
 
   return (
     <div>
-      <h1>Textie</h1>
+      <h1>LinkUp</h1>
       {!isLoggedIn ? (
         <Auth onLoginSuccess={handleLoginSuccess} />
       ) : (
