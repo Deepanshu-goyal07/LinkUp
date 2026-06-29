@@ -1,3 +1,3 @@
-# Chat-App
-Textie — a minimalist real-time chat built with Node.js, Express, and Socket.io. Features Username attribution: prompts for a nickname and prefixes messages with it. Real-time notifications: broadcasts system alerts when users join or leave. Minimalist UI: clean, responsive, lightweight HTML/CSS.
-Check it on : https://chat-app-j77g.onrender.com
+# LinkUp
+
+TexTie is a full-stack real-time messaging app built with React (frontend) and Node.js/Express (backend) that demonstrates two approaches to client-server communication: WebSockets (Socket.io) and HTTP polling. Designed as a modular learning resource, it highlights how each method handles messaging, notifications, and state.
