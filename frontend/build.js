@@ -18,6 +18,7 @@ if (isWatch) {
     // Start a simple dev server using esbuild
     const { host, port } = await ctx.serve({
         servedir: '.',
+        host: '127.0.0.1',
         port: 5173
     });
     console.log(`React dev server running at http://${host || 'localhost'}:${port}`);
