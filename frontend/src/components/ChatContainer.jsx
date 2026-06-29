@@ -109,7 +109,9 @@ export default function ChatContainer({ myUsername, isLoggedIn, handleLogout }) 
     // Triggered when a new real-time message (system or user) is received
     const handleChatMessage = (msg) => {
       if (msg.type === 'system') {
-        setMessages((prev) => [...prev, msg]);
+        if (msg.room === currentRoom) {
+          setMessages((prev) => [...prev, msg]);
+        }
       }
       else if (msg.room === currentRoom) {
         setMessages((prev) => [...prev, msg]);

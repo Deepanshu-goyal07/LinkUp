@@ -27,12 +27,6 @@ function registerSocketHandlers(io) {
             // Broadcast updated list of online users (uniqued list)
             const uniqueOnlineUsers = Array.from(new Set(onlineUsers.values()));
             io.emit('update users list', uniqueOnlineUsers);
-
-            // Send system message to all users
-            io.emit('chat message', {
-                type: 'system',
-                text: `${username} joined the chat`
-            });
         });
 
         // Handle joining a 1-to-1 room
@@ -52,6 +46,15 @@ function registerSocketHandlers(io) {
             // Join the room
             socket.join(roomName);
             console.log(`${socket.username} joined room: ${roomName}`);
+
+            // Emit a system message to the room that this user joined the conversation
+            socket.to(roomName).emit('chat message', {
+                type: 'system',
+                room: roomName,
+                text: `${socket.username} joined the conversation`,
+                timestamp: new Date().toISOString(),
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
 
             // Retrieve history using the model
             const history = ChatModel.getRoomHistory(roomName);
@@ -99,10 +102,17 @@ function registerSocketHandlers(io) {
                 const uniqueOnlineUsers = Array.from(new Set(onlineUsers.values()));
                 io.emit('update users list', uniqueOnlineUsers);
                 
-                // Send system message
-                io.emit('chat message', {
-                    type: 'system',
-                    text: `${socket.username} left the chat`
+                // Send system message only to the active rooms the user was in
+                Array.from(socket.rooms).forEach(r => {
+                    if (r.startsWith('room:')) {
+                        socket.to(r).emit('chat message', {
+                            type: 'system',
+                            room: r,
+                            text: `${socket.username} left the conversation`,
+                            timestamp: new Date().toISOString(),
+                            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                        });
+                    }
                 });
             } else {
                 console.log('a user disconnected');
