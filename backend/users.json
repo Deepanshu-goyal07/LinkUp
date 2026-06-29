@@ -1,0 +1,34 @@
+{
+  "deepanshu": {
+    "username": "deepanshu",
+    "hash": "$2b$10$5N/yOw6MOF8lBfC1QTXPsuttxxhQmcLs1Nzi85I8qOzK.8Q2UgFza"
+  },
+  "bani": {
+    "username": "bani",
+    "hash": "$2b$10$kob1eavzwwuAPC6vTCFaROhQZ/fQGWW2kiqPU716sR.MDCU2GLHa2"
+  },
+  "userA": {
+    "username": "userA",
+    "hash": "$2b$10$6bt4L8HyBukRU8K4VAVFhew0WQlzeRIBKYgsqsuIleLXu/gbcIV52"
+  },
+  "userB": {
+    "username": "userB",
+    "hash": "$2b$10$3aN.Xfgk3ZhmbHeykd8U0OJc9203KpweR6IprLHENzX9nyo6ghTBK"
+  },
+  "userA_t": {
+    "username": "userA_t",
+    "hash": "$2b$10$o1axrS3xE8q6IG5bB9y2FuS004un6lZ2JR3lsmHJchshWHihsFZza"
+  },
+  "userB_t": {
+    "username": "userB_t",
+    "hash": "$2b$10$07rWZhBMZjQHuWcEthK7Ge0FTe9xb9vuEqKvNAjZ5wrhktZlv.tLG"
+  },
+  "<b>test_xss</b>": {
+    "username": "<b>test_xss</b>",
+    "hash": "$2b$10$DVOWyeYUlpOjNpt5Fdxxwu4MZ2ekyAPMwj4oqtoi64F2/mOn2zLjC"
+  },
+  "shaily": {
+    "username": "shaily",
+    "hash": "$2b$10$RMDiWwQG/S9z0pfetkSH1uNNlc1tcVTWiP8J714/ZRt4ZUFpRCvQm"
+  }
+}
