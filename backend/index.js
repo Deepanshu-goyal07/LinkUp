@@ -88,7 +88,7 @@ app.post('/api/upload', upload.array('files', 10), (req, res) => {
 
 
 // Fallback all other routes to frontend index.html
-app.get('*', (req, res) => {
+app.get('/(.*)', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
 });
 
