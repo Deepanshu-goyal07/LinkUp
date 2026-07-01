@@ -1084,7 +1084,7 @@
             }
             return dispatcher.useContext(Context);
           }
-          function useState5(initialState) {
+          function useState6(initialState) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useState(initialState);
           }
@@ -1887,7 +1887,7 @@
           exports.useMemo = useMemo;
           exports.useReducer = useReducer;
           exports.useRef = useRef4;
-          exports.useState = useState5;
+          exports.useState = useState6;
           exports.useSyncExternalStore = useSyncExternalStore;
           exports.useTransition = useTransition;
           exports.version = ReactVersion;
@@ -24891,7 +24891,7 @@
         setMessage("Failed to connect to the server");
       }
     };
-    return /* @__PURE__ */ import_react.default.createElement("div", { id: "auth-container" }, /* @__PURE__ */ import_react.default.createElement("h3", null, isLoginMode ? "Log In" : "Sign Up"), /* @__PURE__ */ import_react.default.createElement("form", { onSubmit: handleSubmit }, /* @__PURE__ */ import_react.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react.default.createElement(
+    return /* @__PURE__ */ import_react.default.createElement("div", { className: "auth-wrapper" }, /* @__PURE__ */ import_react.default.createElement("div", { id: "auth-container" }, /* @__PURE__ */ import_react.default.createElement("div", { style: { textAlign: "center", marginBottom: "0.5rem" } }, /* @__PURE__ */ import_react.default.createElement("div", { className: "avatar", style: { margin: "0 auto 1rem auto", width: "52px", height: "52px", borderRadius: "14px", fontSize: "1.5rem", background: "linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%)" } }, "\u26A1"), /* @__PURE__ */ import_react.default.createElement("h3", null, isLoginMode ? "Welcome back" : "Create Account"), /* @__PURE__ */ import_react.default.createElement("span", { style: { fontSize: "0.85rem", color: "var(--text-muted)" } }, isLoginMode ? "Enter credentials to connect to LinkUp" : "Sign up to start real-time messaging")), /* @__PURE__ */ import_react.default.createElement("form", { onSubmit: handleSubmit, style: { marginTop: "0.5rem" } }, /* @__PURE__ */ import_react.default.createElement("div", { className: "form-group" }, /* @__PURE__ */ import_react.default.createElement(
       "input",
       {
         id: "username-input",
@@ -24912,7 +24912,7 @@
         value: password,
         onChange: (e2) => setPassword(e2.target.value)
       }
-    )), message && /* @__PURE__ */ import_react.default.createElement("div", { id: "auth-message", className: messageClass }, message), /* @__PURE__ */ import_react.default.createElement("button", { type: "submit" }, isLoginMode ? "Log In" : "Sign Up")), /* @__PURE__ */ import_react.default.createElement("p", { className: "toggle-text" }, /* @__PURE__ */ import_react.default.createElement("span", null, isLoginMode ? "Don't have an account?" : "Already have an account?"), " ", /* @__PURE__ */ import_react.default.createElement("a", { href: "#", onClick: handleToggleMode }, isLoginMode ? "Sign Up" : "Log In")));
+    )), message && /* @__PURE__ */ import_react.default.createElement("div", { id: "auth-message", className: messageClass }, message), /* @__PURE__ */ import_react.default.createElement("button", { type: "submit", style: { marginTop: "0.5rem" } }, isLoginMode ? "Log In" : "Sign Up")), /* @__PURE__ */ import_react.default.createElement("p", { className: "toggle-text", style: { marginTop: "0.5rem" } }, /* @__PURE__ */ import_react.default.createElement("span", null, isLoginMode ? "Don't have an account?" : "Already have an account?"), " ", /* @__PURE__ */ import_react.default.createElement("a", { href: "#", onClick: handleToggleMode }, isLoginMode ? "Sign Up" : "Log In"))));
   }
 
   // src/components/ChatContainer.jsx
@@ -24932,28 +24932,65 @@
     onLogout,
     notifications = []
   }) {
+    const [searchQuery, setSearchQuery] = (0, import_react2.useState)("");
+    const [isLogsExpanded, setIsLogsExpanded] = (0, import_react2.useState)(false);
     const otherUsers = onlineUsers.filter((u2) => u2 !== myUsername);
-    return /* @__PURE__ */ import_react2.default.createElement("div", null, /* @__PURE__ */ import_react2.default.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center" } }, /* @__PURE__ */ import_react2.default.createElement("div", null, /* @__PURE__ */ import_react2.default.createElement("strong", null, "Logged in as:"), " ", /* @__PURE__ */ import_react2.default.createElement("span", { id: "my-username" }, myUsername)), /* @__PURE__ */ import_react2.default.createElement("button", { id: "logout-btn", onClick: onLogout, style: { padding: "0.25rem 0.5rem" } }, "Logout")), /* @__PURE__ */ import_react2.default.createElement("div", { style: { marginTop: "0.5rem" } }, /* @__PURE__ */ import_react2.default.createElement("strong", null, "Online Users (Click to chat):"), /* @__PURE__ */ import_react2.default.createElement("span", { id: "users-list" }, otherUsers.length === 0 ? /* @__PURE__ */ import_react2.default.createElement("em", null, " No other users online") : otherUsers.map((user) => {
+    const filteredUsers = otherUsers.filter(
+      (u2) => u2.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    const getAvatarColor = (name) => {
+      const colors = [
+        "linear-gradient(135deg, #f43f5e 0%, #fda4af 100%)",
+        // Rose
+        "linear-gradient(135deg, #3b82f6 0%, #93c5fd 100%)",
+        // Blue
+        "linear-gradient(135deg, #10b981 0%, #6ee7b7 100%)",
+        // Emerald
+        "linear-gradient(135deg, #8b5cf6 0%, #c4b5fd 100%)",
+        // Violet
+        "linear-gradient(135deg, #f59e0b 0%, #fde68a 100%)",
+        // Amber
+        "linear-gradient(135deg, #ec4899 0%, #fbcfe8 100%)",
+        // Pink
+        "linear-gradient(135deg, #06b6d4 0%, #67e8f9 100%)"
+        // Cyan
+      ];
+      let hash = 0;
+      for (let i2 = 0; i2 < name.length; i2++) {
+        hash = name.charCodeAt(i2) + ((hash << 5) - hash);
+      }
+      const index = Math.abs(hash) % colors.length;
+      return colors[index];
+    };
+    const getInitials = (name) => {
+      if (!name) return "?";
+      return name.slice(0, 2).toUpperCase();
+    };
+    return /* @__PURE__ */ import_react2.default.createElement("div", { className: "chat-sidebar" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "sidebar-header" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "brand-section" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "brand-logo-text" }, "LinkUp"), /* @__PURE__ */ import_react2.default.createElement("div", { style: { display: "flex", alignItems: "center", gap: "0.4rem" } }, /* @__PURE__ */ import_react2.default.createElement("span", { className: "pulse-indicator" }), /* @__PURE__ */ import_react2.default.createElement("span", { style: { fontSize: "0.7rem", color: "var(--color-online)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" } }, "Live"))), /* @__PURE__ */ import_react2.default.createElement("div", { className: "sidebar-profile" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "profile-info" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "avatar", style: { background: getAvatarColor(myUsername) } }, getInitials(myUsername)), /* @__PURE__ */ import_react2.default.createElement("div", { className: "my-username-label", style: { display: "flex", flexDirection: "column" } }, /* @__PURE__ */ import_react2.default.createElement("span", { style: { fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 500 } }, "User Session"), /* @__PURE__ */ import_react2.default.createElement("span", { id: "my-username", style: { fontWeight: 700 } }, myUsername))), /* @__PURE__ */ import_react2.default.createElement("button", { id: "logout-btn", onClick: onLogout, title: "Exit Application" }, /* @__PURE__ */ import_react2.default.createElement("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", strokeLinecap: "round", strokeLinejoin: "round" }, /* @__PURE__ */ import_react2.default.createElement("path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" }), /* @__PURE__ */ import_react2.default.createElement("polyline", { points: "16 17 21 12 16 7" }), /* @__PURE__ */ import_react2.default.createElement("line", { x1: "21", y1: "12", x2: "9", y2: "12" })), "Logout"))), /* @__PURE__ */ import_react2.default.createElement("div", { className: "search-container" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "search-box-wrapper" }, /* @__PURE__ */ import_react2.default.createElement(
+      "input",
+      {
+        type: "text",
+        placeholder: "Search users...",
+        value: searchQuery,
+        onChange: (e2) => setSearchQuery(e2.target.value)
+      }
+    ))), /* @__PURE__ */ import_react2.default.createElement("div", { className: "sidebar-users-section" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "users-list-title" }, "Online Chats"), /* @__PURE__ */ import_react2.default.createElement("span", { id: "users-list" }, filteredUsers.length === 0 ? /* @__PURE__ */ import_react2.default.createElement("div", { className: "no-users-msg" }, otherUsers.length === 0 ? "No other users online" : "No matches found") : filteredUsers.map((user) => {
       const unread = unreadCounts[user] || 0;
       const isActive = user === currentTarget;
-      return /* @__PURE__ */ import_react2.default.createElement("span", { key: user }, " ", /* @__PURE__ */ import_react2.default.createElement(
+      return /* @__PURE__ */ import_react2.default.createElement(
         "button",
         {
+          key: user,
           onClick: () => onSelectUser(user),
-          style: {
-            fontWeight: isActive ? "bold" : "normal",
-            backgroundColor: isActive ? "#ddd" : void 0
-          }
+          className: `user-row-btn ${isActive ? "active" : ""}`
         },
-        unread > 0 ? `${user} (${unread})` : user
-      ));
-    }))), notifications.length > 0 && /* @__PURE__ */ import_react2.default.createElement("div", { style: {
-      backgroundColor: "#e6f7ff",
-      border: "1px solid #91d5ff",
-      padding: "0.5rem",
-      borderRadius: "4px",
-      margin: "0.5rem 0"
-    } }, /* @__PURE__ */ import_react2.default.createElement("strong", null, "Polling Notification System:"), " You have ", notifications.length, " message(s) in history (HTTP Polled).", /* @__PURE__ */ import_react2.default.createElement("details", null, /* @__PURE__ */ import_react2.default.createElement("summary", { style: { cursor: "pointer", fontSize: "0.85rem", color: "#1890ff" } }, "View last 3 polled messages"), /* @__PURE__ */ import_react2.default.createElement("ul", { style: { margin: "0.25rem 0 0 0", paddingLeft: "1.2rem", fontSize: "0.85rem" } }, notifications.slice(-3).map((n2, i2) => /* @__PURE__ */ import_react2.default.createElement("li", { key: i2 }, "[", n2.time || n2.timestamp, "] ", /* @__PURE__ */ import_react2.default.createElement("strong", null, n2.sender), ": ", n2.text || "Sent an attachment"))))));
+        /* @__PURE__ */ import_react2.default.createElement("div", { className: "user-row-left" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "user-row-avatar", style: { background: getAvatarColor(user) } }, getInitials(user)), /* @__PURE__ */ import_react2.default.createElement("div", { className: "user-row-name-status" }, /* @__PURE__ */ import_react2.default.createElement("span", { className: "user-row-name" }, user), /* @__PURE__ */ import_react2.default.createElement("span", { className: "user-row-status-text" }, /* @__PURE__ */ import_react2.default.createElement("span", { className: "status-dot" }), "online"))),
+        /* @__PURE__ */ import_react2.default.createElement("div", { className: "user-row-right" }, unread > 0 && /* @__PURE__ */ import_react2.default.createElement("span", { className: "unread-badge" }, unread))
+      );
+    }))), /* @__PURE__ */ import_react2.default.createElement("div", { className: "polling-monitor-container" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "polling-monitor-header", onClick: () => setIsLogsExpanded(!isLogsExpanded) }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "polling-monitor-title" }, /* @__PURE__ */ import_react2.default.createElement("span", { className: "pulse-indicator" }), "HTTP Polling Monitor"), /* @__PURE__ */ import_react2.default.createElement("span", { style: { fontSize: "0.75rem", color: "var(--text-muted)", display: "flex", alignItems: "center", gap: "0.2rem" } }, isLogsExpanded ? "Close Logs \u25B2" : `Logs (${notifications.length}) \u25BC`)), isLogsExpanded && /* @__PURE__ */ import_react2.default.createElement("div", { className: "polling-details" }, /* @__PURE__ */ import_react2.default.createElement("div", { className: "polling-status-desc" }, /* @__PURE__ */ import_react2.default.createElement("span", null, "Telemetry Interval: 5s"), /* @__PURE__ */ import_react2.default.createElement("span", { style: { color: "var(--color-accent)", fontWeight: 600 } }, "Active")), notifications.length === 0 ? /* @__PURE__ */ import_react2.default.createElement("div", { style: { fontSize: "0.75rem", color: "var(--text-muted)", fontStyle: "italic", padding: "0.25rem 0" } }, "No polled records captured yet.") : /* @__PURE__ */ import_react2.default.createElement("ul", { className: "polling-logs-list" }, notifications.slice(-3).reverse().map((n2, i2) => {
+      const logTime = n2.time || (n2.timestamp ? new Date(n2.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }) : "N/A");
+      return /* @__PURE__ */ import_react2.default.createElement("li", { key: i2, className: "polling-log-item" }, "[", logTime, "] ", /* @__PURE__ */ import_react2.default.createElement("strong", null, n2.sender), ": ", n2.text || "Sent attachment");
+    })))));
   }
 
   // src/components/MessageList.jsx
@@ -24963,13 +25000,37 @@
   function MessageList({
     currentTarget,
     messages,
-    messagesEndRef
+    messagesEndRef,
+    onBack,
+    myUsername
   }) {
-    return /* @__PURE__ */ import_react3.default.createElement("div", null, /* @__PURE__ */ import_react3.default.createElement("h3", { id: "chat-header" }, currentTarget ? `Chatting with: ${currentTarget}` : "Select an online user to start chatting"), /* @__PURE__ */ import_react3.default.createElement("ul", { id: "messages" }, messages.map((msg, index) => {
+    const getAvatarColor = (name) => {
+      const colors = [
+        "linear-gradient(135deg, #f43f5e 0%, #fda4af 100%)",
+        "linear-gradient(135deg, #3b82f6 0%, #93c5fd 100%)",
+        "linear-gradient(135deg, #10b981 0%, #6ee7b7 100%)",
+        "linear-gradient(135deg, #8b5cf6 0%, #c4b5fd 100%)",
+        "linear-gradient(135deg, #f59e0b 0%, #fde68a 100%)",
+        "linear-gradient(135deg, #ec4899 0%, #fbcfe8 100%)",
+        "linear-gradient(135deg, #06b6d4 0%, #67e8f9 100%)"
+      ];
+      let hash = 0;
+      for (let i2 = 0; i2 < name.length; i2++) {
+        hash = name.charCodeAt(i2) + ((hash << 5) - hash);
+      }
+      const index = Math.abs(hash) % colors.length;
+      return colors[index];
+    };
+    const getInitials = (name) => {
+      if (!name) return "?";
+      return name.slice(0, 2).toUpperCase();
+    };
+    return /* @__PURE__ */ import_react3.default.createElement("div", { style: { display: "flex", flexDirection: "column", height: "100%", width: "100%", position: "relative" } }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "chat-target-header" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "chat-target-left" }, /* @__PURE__ */ import_react3.default.createElement("button", { className: "chat-back-btn", onClick: onBack, title: "Back to sidebar" }, /* @__PURE__ */ import_react3.default.createElement("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", strokeLinecap: "round", strokeLinejoin: "round" }, /* @__PURE__ */ import_react3.default.createElement("line", { x1: "19", y1: "12", x2: "5", y2: "12" }), /* @__PURE__ */ import_react3.default.createElement("polyline", { points: "12 19 5 12 12 5" }))), /* @__PURE__ */ import_react3.default.createElement("div", { className: "chat-target-info" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "avatar", style: { background: getAvatarColor(currentTarget), width: "36px", height: "36px", fontSize: "0.85rem" } }, getInitials(currentTarget)), /* @__PURE__ */ import_react3.default.createElement("div", { style: { display: "flex", flexDirection: "column" } }, /* @__PURE__ */ import_react3.default.createElement("span", { id: "chat-header", className: "chat-target-name" }, currentTarget), /* @__PURE__ */ import_react3.default.createElement("span", { className: "chat-target-status" }, /* @__PURE__ */ import_react3.default.createElement("span", { className: "status-dot", style: { width: "6px", height: "6px", marginRight: "0.25rem" } }), "active conversation"))))), /* @__PURE__ */ import_react3.default.createElement("div", { className: "messages-pane" }, /* @__PURE__ */ import_react3.default.createElement("ul", { id: "messages" }, messages.map((msg, index) => {
       if (msg.type === "system") {
         return /* @__PURE__ */ import_react3.default.createElement("li", { key: index, className: "system-msg" }, msg.text);
       } else {
         const senderName = msg.sender || msg.username || "Unknown";
+        const isSelf = myUsername && senderName.toLowerCase() === myUsername.toLowerCase();
         let formattedTime = msg.time;
         if (msg.timestamp) {
           formattedTime = new Date(msg.timestamp).toLocaleTimeString([], {
@@ -24977,20 +25038,30 @@
             minute: "2-digit"
           });
         }
-        return /* @__PURE__ */ import_react3.default.createElement("li", { key: index, style: { marginBottom: "0.75rem" } }, /* @__PURE__ */ import_react3.default.createElement("strong", null, senderName), " ", /* @__PURE__ */ import_react3.default.createElement("span", { style: { fontSize: "0.8rem", color: "#888" } }, "(", formattedTime, ")"), ":", " ", msg.text && /* @__PURE__ */ import_react3.default.createElement("span", { style: { marginLeft: "0.25rem" } }, msg.text), msg.files && msg.files.length > 0 && /* @__PURE__ */ import_react3.default.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "0.5rem", marginTop: "0.4rem", paddingLeft: "0.5rem", borderLeft: "2px solid #ccc" } }, msg.files.map((file, fileIdx) => {
+        return /* @__PURE__ */ import_react3.default.createElement("li", { key: index, className: `message-wrapper ${isSelf ? "self" : "other"}` }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "message-meta" }, !isSelf && /* @__PURE__ */ import_react3.default.createElement("strong", null, senderName), /* @__PURE__ */ import_react3.default.createElement("span", null, formattedTime)), /* @__PURE__ */ import_react3.default.createElement("div", { className: "message-bubble" }, msg.text && /* @__PURE__ */ import_react3.default.createElement("div", { style: { wordBreak: "break-word", whiteSpace: "pre-wrap" } }, msg.text), msg.files && msg.files.length > 0 && /* @__PURE__ */ import_react3.default.createElement("div", { className: "msg-attachments-grid" }, msg.files.map((file, fileIdx) => {
           const fileUrl = `${API_BASE_URL}${file.url}`;
           const isImage = file.mimetype && file.mimetype.startsWith("image/");
-          return /* @__PURE__ */ import_react3.default.createElement("div", { key: fileIdx, className: "shared-file" }, isImage ? /* @__PURE__ */ import_react3.default.createElement("div", { style: { marginTop: "0.25rem" } }, /* @__PURE__ */ import_react3.default.createElement("a", { href: fileUrl, target: "_blank", rel: "noopener noreferrer" }, /* @__PURE__ */ import_react3.default.createElement(
+          return /* @__PURE__ */ import_react3.default.createElement("div", { key: fileIdx, className: "shared-file" }, isImage ? /* @__PURE__ */ import_react3.default.createElement("div", null, /* @__PURE__ */ import_react3.default.createElement("div", { className: "shared-file-img-wrapper" }, /* @__PURE__ */ import_react3.default.createElement("a", { href: fileUrl, target: "_blank", rel: "noopener noreferrer" }, /* @__PURE__ */ import_react3.default.createElement(
             "img",
             {
               src: fileUrl,
               alt: file.originalname,
-              style: { maxWidth: "200px", maxHeight: "150px", borderRadius: "4px", border: "1px solid #ddd", display: "block", marginBottom: "0.2rem" }
+              className: "shared-file-img"
             }
-          )), /* @__PURE__ */ import_react3.default.createElement("span", { style: { fontSize: "0.8rem", color: "#666" } }, file.originalname, " (", (file.size / 1024).toFixed(1), " KB)")) : /* @__PURE__ */ import_react3.default.createElement("div", { style: { display: "flex", alignItems: "center", gap: "0.25rem", fontSize: "0.9rem" } }, "\u{1F4C4} ", /* @__PURE__ */ import_react3.default.createElement("a", { href: fileUrl, target: "_blank", rel: "noopener noreferrer", download: file.originalname, style: { fontWeight: "bold" } }, file.originalname), /* @__PURE__ */ import_react3.default.createElement("span", { style: { fontSize: "0.8rem", color: "#666" } }, "(", (file.size / 1024).toFixed(1), " KB)")));
-        })));
+          ))), /* @__PURE__ */ import_react3.default.createElement("div", { className: "shared-file-info" }, /* @__PURE__ */ import_react3.default.createElement("span", { style: { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "140px" } }, file.originalname), /* @__PURE__ */ import_react3.default.createElement("span", null, "(", (file.size / 1024).toFixed(1), " KB)"))) : /* @__PURE__ */ import_react3.default.createElement("div", { className: "shared-file-doc" }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "shared-file-doc-left" }, /* @__PURE__ */ import_react3.default.createElement("span", { style: { fontSize: "1.2rem" } }, "\u{1F4C4}"), /* @__PURE__ */ import_react3.default.createElement("div", { style: { display: "flex", flexDirection: "column", overflow: "hidden" } }, /* @__PURE__ */ import_react3.default.createElement("span", { className: "shared-file-doc-name", title: file.originalname }, file.originalname), /* @__PURE__ */ import_react3.default.createElement("span", { className: "shared-file-doc-size" }, (file.size / 1024).toFixed(1), " KB"))), /* @__PURE__ */ import_react3.default.createElement(
+            "a",
+            {
+              href: fileUrl,
+              target: "_blank",
+              rel: "noopener noreferrer",
+              download: file.originalname,
+              className: "shared-file-doc-dl"
+            },
+            "Get File"
+          )));
+        }))));
       }
-    }), /* @__PURE__ */ import_react3.default.createElement("div", { ref: messagesEndRef })));
+    }), /* @__PURE__ */ import_react3.default.createElement("div", { ref: messagesEndRef }))));
   }
 
   // src/components/MessageInput.jsx
@@ -25026,32 +25097,16 @@
       }
     };
     if (!currentTarget) return null;
-    return /* @__PURE__ */ import_react4.default.createElement("form", { id: "form", onSubmit: handleSubmit, style: { display: "flex", flexDirection: "column", height: "auto", minHeight: "3rem" } }, selectedFiles.length > 0 && /* @__PURE__ */ import_react4.default.createElement("div", { style: { flexShrink: 0, padding: "0.5rem", background: "#f5f5f5", border: "1px solid #ddd", borderRadius: "4px", marginBottom: "0.5rem", fontSize: "0.9rem" } }, /* @__PURE__ */ import_react4.default.createElement("strong", null, "Attached files (", selectedFiles.length, "):"), /* @__PURE__ */ import_react4.default.createElement("div", { style: { display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "0.25rem" } }, selectedFiles.map((f2, i2) => /* @__PURE__ */ import_react4.default.createElement("span", { key: i2, style: { background: "#e0e0e0", padding: "0.3rem 0.8rem", borderRadius: "16px", display: "inline-flex", alignItems: "center", fontSize: "0.85rem" } }, f2.name, /* @__PURE__ */ import_react4.default.createElement(
+    return /* @__PURE__ */ import_react4.default.createElement("form", { id: "form", onSubmit: handleSubmit }, selectedFiles.length > 0 && /* @__PURE__ */ import_react4.default.createElement("div", { className: "attachment-previews-container" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "attachment-previews-title" }, "Pending Uploads (", selectedFiles.length, ")"), /* @__PURE__ */ import_react4.default.createElement("div", { className: "previews-list" }, selectedFiles.map((f2, i2) => /* @__PURE__ */ import_react4.default.createElement("span", { key: i2, className: "preview-file-tag" }, /* @__PURE__ */ import_react4.default.createElement("span", { style: { fontSize: "0.9rem" } }, "\u{1F4C4}"), /* @__PURE__ */ import_react4.default.createElement("span", { style: { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "120px" } }, f2.name), /* @__PURE__ */ import_react4.default.createElement(
       "button",
       {
         type: "button",
         onClick: () => handleRemoveFile(i2),
-        style: {
-          marginLeft: "0.6rem",
-          border: "none",
-          background: "#ff5555",
-          color: "#fff",
-          cursor: "pointer",
-          fontWeight: "bold",
-          borderRadius: "50%",
-          width: "18px",
-          height: "18px",
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "12px",
-          lineHeight: "1",
-          padding: 0
-        },
+        className: "btn-remove-preview",
         title: "Remove file"
       },
       "\xD7"
-    ))))), /* @__PURE__ */ import_react4.default.createElement("div", { style: { display: "flex", alignItems: "center", width: "100%", flexShrink: 0 } }, /* @__PURE__ */ import_react4.default.createElement(
+    ))))), /* @__PURE__ */ import_react4.default.createElement("div", { className: "form-main-input-row" }, /* @__PURE__ */ import_react4.default.createElement(
       "input",
       {
         type: "file",
@@ -25066,11 +25121,12 @@
       {
         type: "button",
         onClick: () => fileInputRef.current?.click(),
-        className: "form-btn",
-        style: { marginRight: "0.5rem", whiteSpace: "nowrap" },
-        disabled: isUploading
+        className: "form-btn btn-attach",
+        disabled: isUploading,
+        title: "Attach Files"
       },
-      "\u{1F4CE} Attach"
+      /* @__PURE__ */ import_react4.default.createElement("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round" }, /* @__PURE__ */ import_react4.default.createElement("path", { d: "m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" })),
+      /* @__PURE__ */ import_react4.default.createElement("span", { className: "btn-text-desktop", style: { marginLeft: "0.25rem", fontSize: "0.85rem" } }, "Attach")
     ), /* @__PURE__ */ import_react4.default.createElement(
       "input",
       {
@@ -25079,17 +25135,17 @@
         value: inputText,
         onChange: (e2) => setInputText(e2.target.value),
         disabled: isUploading,
-        placeholder: isUploading ? "Uploading files..." : "Type a message...",
-        style: { flex: 1 }
+        placeholder: isUploading ? "Uploading attachments to server..." : "Type your message..."
       }
     ), /* @__PURE__ */ import_react4.default.createElement(
       "button",
       {
         type: "submit",
         className: "form-btn",
-        disabled: isUploading || !inputText.trim() && selectedFiles.length === 0
+        disabled: isUploading || !inputText.trim() && selectedFiles.length === 0,
+        title: "Send message"
       },
-      isUploading ? "Sending..." : "Send"
+      isUploading ? /* @__PURE__ */ import_react4.default.createElement("span", null, "Sending...") : /* @__PURE__ */ import_react4.default.createElement(import_react4.default.Fragment, null, /* @__PURE__ */ import_react4.default.createElement("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", strokeLinecap: "round", strokeLinejoin: "round" }, /* @__PURE__ */ import_react4.default.createElement("line", { x1: "22", y1: "2", x2: "11", y2: "13" }), /* @__PURE__ */ import_react4.default.createElement("polygon", { points: "22 2 15 22 11 13 2 9 22 2" })), /* @__PURE__ */ import_react4.default.createElement("span", { className: "btn-text-desktop", style: { marginLeft: "0.25rem" } }, "Send"))
     )));
   }
 
@@ -25109,7 +25165,7 @@
     (0, import_react5.useEffect)(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
-    return /* @__PURE__ */ import_react5.default.createElement("div", { id: "chat-container" }, /* @__PURE__ */ import_react5.default.createElement(
+    return /* @__PURE__ */ import_react5.default.createElement("div", { id: "chat-container", className: `chat-layout ${currentTarget ? "mobile-chat-active" : ""}` }, /* @__PURE__ */ import_react5.default.createElement(
       ChatHeader,
       {
         myUsername,
@@ -25120,12 +25176,14 @@
         onLogout,
         notifications
       }
-    ), /* @__PURE__ */ import_react5.default.createElement(
+    ), /* @__PURE__ */ import_react5.default.createElement("div", { className: "chat-main" }, currentTarget ? /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, /* @__PURE__ */ import_react5.default.createElement(
       MessageList,
       {
         currentTarget,
         messages,
-        messagesEndRef
+        messagesEndRef,
+        onBack: () => onSelectUser(null),
+        myUsername
       }
     ), /* @__PURE__ */ import_react5.default.createElement(
       MessageInput,
@@ -25133,7 +25191,7 @@
         currentTarget,
         onSendMessage
       }
-    ));
+    )) : /* @__PURE__ */ import_react5.default.createElement("div", { className: "empty-chat-state" }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "empty-chat-icon" }, "\u{1F4AC}"), /* @__PURE__ */ import_react5.default.createElement("div", null, /* @__PURE__ */ import_react5.default.createElement("h2", null, "Welcome to LinkUp, ", myUsername, "!"), /* @__PURE__ */ import_react5.default.createElement("p", { style: { marginTop: "0.5rem", opacity: 0.8 } }, "Select an online user from the sidebar to start chatting.")))));
   }
 
   // src/components/ChatContainer.jsx
@@ -25243,6 +25301,11 @@
       };
     }, [isLoggedIn, myUsername, currentTarget, currentRoom, handleLogout]);
     const handleSelectUser = (targetUser) => {
+      if (!targetUser) {
+        setCurrentTarget(null);
+        setCurrentRoom(null);
+        return;
+      }
       setCurrentTarget(targetUser);
       socket_default.emit("join room", targetUser);
       setUnreadCounts((prev) => ({ ...prev, [targetUser]: 0 }));
@@ -25326,7 +25389,7 @@
       setIsLoggedIn(false);
       socket_default.disconnect();
     };
-    return /* @__PURE__ */ import_react7.default.createElement("div", null, /* @__PURE__ */ import_react7.default.createElement("h1", null, "LinkUp"), !isLoggedIn ? /* @__PURE__ */ import_react7.default.createElement(Auth, { onLoginSuccess: handleLoginSuccess }) : /* @__PURE__ */ import_react7.default.createElement(
+    return /* @__PURE__ */ import_react7.default.createElement("div", null, !isLoggedIn ? /* @__PURE__ */ import_react7.default.createElement(Auth, { onLoginSuccess: handleLoginSuccess }) : /* @__PURE__ */ import_react7.default.createElement(
       ChatContainer,
       {
         myUsername,

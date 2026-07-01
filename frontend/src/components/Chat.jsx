@@ -22,7 +22,7 @@ export default function Chat({
   }, [messages]);
 
   return (
-    <div id="chat-container">
+    <div id="chat-container" className={`chat-layout ${currentTarget ? 'mobile-chat-active' : ''}`}>
       <ChatHeader
         myUsername={myUsername}
         onlineUsers={onlineUsers}
@@ -33,16 +33,32 @@ export default function Chat({
         notifications={notifications}
       />
       
-      <MessageList
-        currentTarget={currentTarget}
-        messages={messages}
-        messagesEndRef={messagesEndRef}
-      />
-      
-      <MessageInput
-        currentTarget={currentTarget}
-        onSendMessage={onSendMessage}
-      />
+      <div className="chat-main">
+        {currentTarget ? (
+          <>
+            <MessageList
+              currentTarget={currentTarget}
+              messages={messages}
+              messagesEndRef={messagesEndRef}
+              onBack={() => onSelectUser(null)}
+              myUsername={myUsername}
+            />
+            
+            <MessageInput
+              currentTarget={currentTarget}
+              onSendMessage={onSendMessage}
+            />
+          </>
+        ) : (
+          <div className="empty-chat-state">
+            <div className="empty-chat-icon">💬</div>
+            <div>
+              <h2>Welcome to LinkUp, {myUsername}!</h2>
+              <p style={{ marginTop: '0.5rem', opacity: 0.8 }}>Select an online user from the sidebar to start chatting.</p>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

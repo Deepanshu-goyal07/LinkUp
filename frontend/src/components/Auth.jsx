@@ -62,45 +62,56 @@ export default function Auth({ onLoginSuccess }) {
   };
 
   return (
-    <div id="auth-container">
-      <h3>{isLoginMode ? 'Log In' : 'Sign Up'}</h3>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <input
-            id="username-input"
-            type="text"
-            autoComplete="off"
-            required
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <input
-            id="password-input"
-            type="password"
-            required
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        {message && (
-          <div id="auth-message" className={messageClass}>
-            {message}
+    <div className="auth-wrapper">
+      <div id="auth-container">
+        <div style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
+          <div className="avatar" style={{ margin: '0 auto 1rem auto', width: '52px', height: '52px', borderRadius: '14px', fontSize: '1.5rem', background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%)' }}>
+            ⚡
           </div>
-        )}
-        <button type="submit">
-          {isLoginMode ? 'Log In' : 'Sign Up'}
-        </button>
-      </form>
-      <p className="toggle-text">
-        <span>{isLoginMode ? "Don't have an account?" : 'Already have an account?'}</span>{' '}
-        <a href="#" onClick={handleToggleMode}>
-          {isLoginMode ? 'Sign Up' : 'Log In'}
-        </a>
-      </p>
+          <h3>{isLoginMode ? 'Welcome back' : 'Create Account'}</h3>
+          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+            {isLoginMode ? 'Enter credentials to connect to LinkUp' : 'Sign up to start real-time messaging'}
+          </span>
+        </div>
+
+        <form onSubmit={handleSubmit} style={{ marginTop: '0.5rem' }}>
+          <div className="form-group">
+            <input
+              id="username-input"
+              type="text"
+              autoComplete="off"
+              required
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              id="password-input"
+              type="password"
+              required
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          {message && (
+            <div id="auth-message" className={messageClass}>
+              {message}
+            </div>
+          )}
+          <button type="submit" style={{ marginTop: '0.5rem' }}>
+            {isLoginMode ? 'Log In' : 'Sign Up'}
+          </button>
+        </form>
+        <p className="toggle-text" style={{ marginTop: '0.5rem' }}>
+          <span>{isLoginMode ? "Don't have an account?" : 'Already have an account?'}</span>{' '}
+          <a href="#" onClick={handleToggleMode}>
+            {isLoginMode ? 'Sign Up' : 'Log In'}
+          </a>
+        </p>
+      </div>
     </div>
   );
 }

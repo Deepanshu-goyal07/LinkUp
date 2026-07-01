@@ -13,7 +13,7 @@ export default function ChatContainer({ myUsername, isLoggedIn, handleLogout }) 
   // Track previous count of messages to know if a new one arrived
   const lastNotificationCountRef = useRef(0);
 
-  // Request native browser Notification permission on login
+  // (Request browser Notification permission)
   useEffect(() => {
     if (isLoggedIn && 'Notification' in window) {
       if (Notification.permission === 'default') {
@@ -22,7 +22,7 @@ export default function ChatContainer({ myUsername, isLoggedIn, handleLogout }) 
     }
   }, [isLoggedIn]);
 
-  // Beginner-friendly HTTP polling for notifications/messages
+  // HTTP polling for notifications/messages
   useEffect(() => {
     if (!isLoggedIn || !myUsername) return;
 
@@ -148,6 +148,11 @@ export default function ChatContainer({ myUsername, isLoggedIn, handleLogout }) 
 
   // Triggered when a user clicks on an online user to join their 1-to-1 chat room
   const handleSelectUser = (targetUser) => {
+    if (!targetUser) {
+      setCurrentTarget(null);
+      setCurrentRoom(null);
+      return;
+    }
     setCurrentTarget(targetUser);
     socket.emit('join room', targetUser);
     setUnreadCounts((prev) => ({ ...prev, [targetUser]: 0 }));
